@@ -14,17 +14,24 @@ let c=0;
 let balleChercheuse;
 let balleImage;
 let assets;
-let nombreBalesmulti
+let nombreBalesmulti;
+let musiqueCourante = null;
 
 
 // programme principal
 function main() {
-  console.log(
-    "Page chargée ! DOM ready ! Toutes les resources de la page sont utilisables (videos, images, polices etc."
-  );
+  console.log("Page chargée ! DOM ready ! Toutes les ressources de la page sont utilisables (vidéos, images, polices ...)");
+
+  loadAssets(startGame);
+
+}
+
+function startGame(assetsLoaded) {
+
+  assets = assetsLoaded;
   // On récupère grace à la "selector API" un pointeur sur le canvas
   canvas = document.querySelector("#myCanvas");
-
+  
   // on ajoute des écouteurs souris/clavier sur le canvas
   canvas.onmousedown = traiteMouseDown;
   canvas.onmouseup = traiteMouseUp;
@@ -108,6 +115,7 @@ function animationLoop() {
       break;
     case "GameOver":
       afficheEcranGameOver();
+      
   }
 
   // 5 On demande au navigateur de rappeler la fonction
@@ -122,7 +130,7 @@ function afficheMenuPrincipal() {
   ctx.fillText("MENU PRINCIPAL", 700, 20);
 
   ctx.fillText("Cliquez pour démarrer", 665, 70);
-
+  changeson(assets.gameson);
   ctx.restore();
 }
 
@@ -145,8 +153,8 @@ function afficheEcranGameOver() {
   ctx.fillStyle = "black";
   ctx.font = "40pt OCR A Std";
   ctx.fillText("Game Over ", 350, 100);
-
   ctx.fillText("Cliquez pour rejouer", 325, 150);
+  changeson(assets.fin)
   ctx.restore();
 }
 
@@ -155,7 +163,7 @@ function niveauSuivant() {
   niveauCourant++;
   c=0;
   tableauDesBalles = [];
-  creerDesBalles(newb + niveauCourant  );
+  creerDesBalles(newb + niveauCourant );
   etatJeu = "JeuEnCours";
 }
 function replay() {
@@ -166,6 +174,7 @@ function replay() {
   c=0;
   tableauDesBalles = [];
   creerDesBalles(newb + niveau / 10);
+
   etatJeu = "JeuEnCours";
 }
 function updateJeu() {
@@ -180,13 +189,18 @@ function updateJeu() {
   // ou prendre en compte le clavier, la souris, la manette de jeu)
   traiteCollisionsJoueurAvecBords();
   if (chance == 0) {
+
     etatJeu = "GameOver"
+    
+   // changeson(assets.gameover);
   }
  
 
   if (changelvl) {
     etatJeu = "EcranChangementNiveau";
     changelvl=false;
+    
+
   }
 }
 
@@ -208,6 +222,7 @@ function traiteCollisionBalleAvecMonstre(b) {
   ) {
     if (b instanceof BalleChercheuse) {
       console.log("COLLISION AVEC BALLE CHERCHEUSE");
+      
     }
 
     console.log("COLLISION....");
@@ -217,13 +232,15 @@ function traiteCollisionBalleAvecMonstre(b) {
       b.couleur != "red"
     ) {
       scr += 10;
-     
+      
+      changeson(assets.eat);
     }
+    
     if (
       b.couleur == "red"
     ) {
       chance -= 1;
-  
+    
       etatJeu= "GameOver";
     }
     // pour supprimer un élément : on utilise la méthode splice(index, nbElementsASupprimer) sur le tableau
@@ -264,47 +281,3 @@ function updateBalles() {
   }
   
 }
-/**function niveauFini() {
-  for(let i=0;i<tableauDesBalles.length;i++){
-    balle = tableauDesBalles[i];
-    if(balleImage.couleur != "red"){
-      return false;
-    }
-  }
- niveauCourant++;
- tableauDesBalles=[];
- creerDesBalles(nbb);
- return true
-}
-
-function traiteCollisionBalleAvecMonstre(b) {
-  let spanScore = document.querySelector("#score")
-  if (
-    circRectsOverlap(
-      monstre.x,
-      monstre.y,
-      monstre.l,
-      monstre.h,
-      b.x,
-      b.y,
-      b.rayon
-    )
-  ) {
-    let index = tableauDesBalles.indexOf(b);
-    tableauDesBalles.splice(index,1);
-    if (b.couleur != "red")
-    if (b instanceof BalleChercheuse) {
-      console.log("COLLISION AVEC BALLE CHERCHEUSE");
-    }
-
-    console.log("COLLISION....");
-    // on cherche l'index de la balle dans le tableau des balles
-    let index = tableauDesBalles.indexOf(b);
-
-    // pour supprimer un élément : on utilise la méthode splice(index, nbElementsASupprimer) sur le tableau
-    tableauDesBalles.splice(index, 1);
-    //b.couleur = "pink";
-  }
-}
-
- */

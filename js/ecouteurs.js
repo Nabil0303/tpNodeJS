@@ -11,6 +11,7 @@ function traiteMouseDown(event) {
 
   switch (etatJeu) {
     case "MenuPrincipal":
+     // changeson(assets.gameson)
       etatJeu = "JeuEnCours";
       break;
     case "EcranChangementNiveau":
@@ -57,6 +58,7 @@ function traiteKeyDown(event) {
       monstre.vitesseY = 5;
       break;
   }
+  
 }
 
 function traiteKeyUp(event) {
